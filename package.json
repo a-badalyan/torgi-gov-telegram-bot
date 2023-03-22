@@ -12,6 +12,9 @@
     "lint": "eslint './src/**/*.ts' && prettier --check './src/**/*.ts' && tsc",
     "debug": "node --inspect index.js"
   },
+  "repository": {
+    "url": "https://github.com/a-badalyan/torgi-gov-telegram-bot"
+  },
   "author": "A. Badalyan",
   "license": "MIT",
   "dependencies": {
