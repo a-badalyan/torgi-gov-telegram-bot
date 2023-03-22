@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  main:
+    image: node:16
+    environment:
+      ENVIRONMENT: stage
+      PORT: 3000
+      POSTGRES_URI: postgres://postgres:postgres@postgres/postgres
+      REDIS_URI: redis:6379
+      LOG_LEVEL: debug
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/code
+    working_dir: /code
+    ports: [ '3000:3000' ]
+    command: 'npm run start'
+    depends_on: [ postgres, redis ]
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+     - "5432:5432"
+  
+  redis:
+    image: redis:6-alpine
+    ports: 
+      - '6379:6379'
