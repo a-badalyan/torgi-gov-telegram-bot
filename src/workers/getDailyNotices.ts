@@ -24,9 +24,4 @@ export default async function getDailyNotices(
       await this.bullQueues[GET_NOTICE].add(GET_NOTICE, body);
     }),
   );
-
-  // fs.writeFileSync(
-  //   `${__dirname}/${date}.ts`,
-  //   `export default ${JSON.stringify(data)}`,
-  // );
 }

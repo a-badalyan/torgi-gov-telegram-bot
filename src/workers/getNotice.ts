@@ -14,9 +14,4 @@ export default async function getNotice(
   });
 
   const date = Date.now();
-
-  // fs.writeFileSync(
-  //   `${__dirname}/${date}.ts`,
-  //   `export default ${JSON.stringify(data)}`,
-  // );
 }
