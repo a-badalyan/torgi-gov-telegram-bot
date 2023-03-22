@@ -2,6 +2,7 @@
   "name": "torgi-gov-telegram-bot",
   "version": "1.0.0",
   "description": "",
+  "repository": "git@github.com:a-badalyan/torgi-gov-telegram-bot.git",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -12,7 +13,6 @@
     "lint": "eslint './src/**/*.ts' && prettier --check './src/**/*.ts' && tsc",
     "debug": "node --inspect index.js"
   },
-  "repository": "git@github.com:a-badalyan/torgi-gov-telegram-bot",
   "author": "A. Badalyan",
   "license": "MIT",
   "dependencies": {
