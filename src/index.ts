@@ -68,5 +68,6 @@ process.on('unhandledRejection', (reason, promise) => {
 (async () => {
   await jobProcessor.start();
 
+  // FIXME: empty comment
   log.info({ msg: 'service_started' });
 })();

@@ -1,5 +1,4 @@
 FROM node:16 as builder
-ARG NPM_TOKEN
 WORKDIR /builder
 COPY . .
 RUN npm install && \
