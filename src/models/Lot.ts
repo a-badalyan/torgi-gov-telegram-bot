@@ -3,21 +3,21 @@ import { Model, RelationMappings } from 'objection';
 import Notice from './Notice';
 import Region from './Region';
 
-export default class Lots extends Model {
-  static tableName: 'lots';
-  static idColumn: 'id';
+export default class Lot extends Model {
+  static tableName = 'lots';
+  static idColumn = 'id';
 
-  id!: number;
-  notice_number!: string;
+  id: number;
+  noticeNumber: string;
   status: string;
   name: string;
-  description!: string;
-  price_min!: string;
-  price_step!: Date;
-  deposit!: string;
-  currency!: string;
-  region_code!: number;
-  estate_address!: string;
+  description: string;
+  priceMin?: string | null;
+  priceStep?: string | null;
+  deposit?: string | null;
+  currency: string;
+  regionCode: number;
+  estateAddress: string;
 
   notice?: Notice;
   region?: Region;
@@ -28,8 +28,8 @@ export default class Lots extends Model {
         relation: Model.HasOneRelation,
         modelClass: Notice,
         join: {
-          from: 'lots.notice_number',
-          to: 'notices.notice_number',
+          from: 'lots.noticeNumber',
+          to: 'notices.noticeNumber',
         },
       },
 
@@ -37,7 +37,7 @@ export default class Lots extends Model {
         relation: Model.HasOneRelation,
         modelClass: Region,
         join: {
-          from: 'lots.region_code',
+          from: 'lots.regionCode',
           to: 'regions.code',
         },
       },

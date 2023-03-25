@@ -51,6 +51,11 @@ export type GetNoticeJobBody = {
   href: string;
 };
 
+export type AddLotJob = {
+  noticeNumber: string;
+  lot: LotType;
+};
+
 export type DailyNotices = {
   listObjects: Array<{
     bidderOrgCode: string;
@@ -62,7 +67,52 @@ export type DailyNotices = {
   }>;
 };
 
-export type Notice = {
+export type LotType = {
+  lotNumber: number;
+  lotStatus: string;
+  lotName: string;
+  lotDescription: string;
+  priceMin?: string | null;
+  priceStep?: string | null;
+  deposit?: string | null;
+  accountsRequisites: {
+    electronicPlatform: boolean;
+    recipient: {
+      name: string;
+      INN: string;
+      KPP: string;
+    };
+    bankName: string;
+    BIK: string;
+    payAccount: string;
+    corAccount: string;
+    purposePayment: string;
+  };
+  currency: { code: string; name: string };
+  biddingObjectInfo: {
+    subjectRF: { code: number; name: string };
+    estateAddress: string;
+    // category: { code: '304'; name: 'Земли лесного фонда' };
+    category: { code: string; name: string };
+    isCompound: boolean;
+    // ownershipForms: { code: '12'; name: 'Федеральная собственность' };
+    ownershipForms: { code: string; name: string };
+    characteristics: Array<{
+      code: string;
+      name: string;
+      characteristicValue: any;
+      // OKEI?: { code: '055'; name: 'Квадратный метр' };
+      OKEI?: { code: string; name: string } | null;
+    }>;
+  };
+  additionalDetails: Array<{
+    code: string;
+    name: string;
+    value: any;
+  }>;
+};
+
+export type NoticeResponse = {
   exportObject: {
     structuredObject: {
       notice: {
@@ -118,53 +168,7 @@ export type Notice = {
             actualAddress: string;
           };
         };
-        lots: Array<{
-          lotNumber: number;
-          // lotStatus: 'PUBLISHED';
-          lotStatus: string;
-          lotName: string;
-          lotDescription: string;
-          priceMin: string;
-          priceStep: string;
-          deposit: string;
-          accountsRequisites: {
-            electronicPlatform: boolean;
-            recipient: {
-              name: string;
-              INN: string;
-              KPP: string;
-            };
-            bankName: string;
-            BIK: string;
-            payAccount: string;
-            corAccount: string;
-            purposePayment: string;
-          };
-          // currency: { code: '643'; name: 'Российский рубль' };
-          currency: { code: string; name: string };
-          biddingObjectInfo: {
-            // subjectRF: { code: '5'; name: 'Республика Дагестан' };
-            subjectRF: { code: string; name: string };
-            estateAddress: string;
-            // category: { code: '304'; name: 'Земли лесного фонда' };
-            category: { code: string; name: string };
-            isCompound: boolean;
-            // ownershipForms: { code: '12'; name: 'Федеральная собственность' };
-            ownershipForms: { code: string; name: string };
-            characteristics: Array<{
-              code: string;
-              name: string;
-              characteristicValue: any;
-              // OKEI?: { code: '055'; name: 'Квадратный метр' };
-              OKEI?: { code: string; name: string } | null;
-            }>;
-          };
-          additionalDetails: Array<{
-            code: string;
-            name: string;
-            value: any;
-          }>;
-        }>;
+        lots?: Array<LotType>;
         biddConditions: {
           biddStartTime: string;
           biddEndTime: string;

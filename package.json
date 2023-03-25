@@ -5,11 +5,11 @@
   "repository": "git@github.com:a-badalyan/torgi-gov-telegram-bot.git",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm run migrate && node index.js",
     "prettier": "prettier './src/**/*.ts' --write",
     "test": "npm run lint",
-    "tsc": "tsc",
-    "build": "rm -rf dist/ && tsc --build",
+    "migrate": "knex --migrations-directory ./src/migrations migrate:latest",
+    "build": "rm -rf dist/ && tsc --build && cp ./knexfile.ts ./dist/",
     "lint": "eslint './src/**/*.ts' && prettier --check './src/**/*.ts' && tsc",
     "debug": "node --inspect index.js"
   },
@@ -39,7 +39,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.4",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.9.5"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
   }
 }
