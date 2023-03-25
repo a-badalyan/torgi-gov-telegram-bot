@@ -78,6 +78,7 @@ export default class JobProcessor implements IJobProcessor {
         repeat: {
           every: 5 * 1000,
         },
+        removeOnComplete: 100,
       },
     );
   }

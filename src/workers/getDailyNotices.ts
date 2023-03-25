@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
 import { Job } from 'bullmq';
-import fs from 'fs';
 import IJobProcessor from '../types/IJobProcessor';
 import { DailyNotices, GetNoticeJobBody } from '../types';
 import pAll from 'p-all';
@@ -15,13 +14,12 @@ export default async function getDailyNotices(
     timeout: 10 * 1000,
   });
 
-  const date = Date.now();
-
   await pAll(
     data.listObjects.map((notice) => async (): Promise<void> => {
       const body: GetNoticeJobBody = { href: notice.href };
 
       await this.bullQueues[GET_NOTICE].add(GET_NOTICE, body);
     }),
+    { concurrency: 30 },
   );
 }
