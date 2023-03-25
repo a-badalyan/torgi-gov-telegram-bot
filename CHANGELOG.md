@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.0.0...v1.1.0) (2023-03-25)
+
+
+### feat
+
+* update version ([4ed28b0](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/4ed28b0978d5f38058fafcee0407f139a4819a06))
+
 # 1.0.0 (2023-03-22)
 
 
