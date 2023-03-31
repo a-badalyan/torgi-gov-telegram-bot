@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.1.0...v1.2.0) (2023-03-31)
+
+
+### feat
+
+* mongoose ([8d718c0](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/8d718c0b538e11b844150f689be69884eeabf589))
+
 # [1.1.0](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.0.0...v1.1.0) (2023-03-25)
 
 
