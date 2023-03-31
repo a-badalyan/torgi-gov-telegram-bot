@@ -16,8 +16,8 @@ const getConfig = (): IConfig => {
         .default('debug')
         .asEnum(['debug', 'info', 'error']),
       port: env.get('PORT').required().default(3000).asPortNumber(),
-      postgresUri: env
-        .get('POSTGRES_URI')
+      mongoUri: env
+        .get('MONGO_URI')
         .default('http://bad-url')
         .required()
         .asUrlString(),
