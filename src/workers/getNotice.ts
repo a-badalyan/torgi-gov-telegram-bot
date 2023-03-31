@@ -3,10 +3,7 @@ import { Job } from 'bullmq';
 
 import IJobProcessor from '../types/IJobProcessor';
 import { GetNoticeJobBody, NoticeResponse } from '../types';
-import Notice from '../models/Notice';
-import Lot from '../models/Lot';
-import pAll from 'p-all';
-import Region from '../models/Region';
+import { notificationModel } from '../models/notification.model';
 
 export default async function getNotice(
   this: IJobProcessor,
@@ -20,43 +17,18 @@ export default async function getNotice(
     },
   );
 
-  const notice = data.exportObject.structuredObject.notice;
-  const noticeNumber = notice.commonInfo.noticeNumber;
+  const notification = data.exportObject.structuredObject.notice.commonInfo;
 
-  await Notice.query().insert({
-    noticeNumber,
-    bidType: notice.commonInfo.biddType.name,
-    bidForm: notice.commonInfo.biddForm.name,
-    publishedAt: new Date(notice.commonInfo.publishDate),
-    procedureName: notice.commonInfo.procedureName,
-    href: notice.commonInfo.href,
+  new notificationModel({
+    noticeNumber: notification.noticeNumber,
+    bidType: notification.biddType,
+    bidForm: notification.biddForm,
+    publishedAt: notification.publishDate,
+    procedureName: notification.procedureName,
+    href: notification.href,
+  }).save();
+
+  this.log.info({
+    msg: `notification_${notification.noticeNumber}_added`,
   });
-
-  if (notice.lots) {
-    await pAll(
-      notice.lots.map((lot) => async (): Promise<void> => {
-        await Region.query()
-          .insert({
-            code: lot.biddingObjectInfo.subjectRF.code,
-            name: lot.biddingObjectInfo.subjectRF.name,
-          })
-          .onConflict()
-          .ignore();
-
-        await Lot.query().insert({
-          noticeNumber,
-          status: lot.lotStatus,
-          name: lot.lotName,
-          description: lot.lotDescription,
-          priceMin: lot.priceMin,
-          priceStep: lot.priceStep,
-          deposit: lot.deposit,
-          currency: lot.currency.name,
-          regionCode: lot.biddingObjectInfo.subjectRF.code,
-          estateAddress: lot.biddingObjectInfo.estateAddress,
-        });
-      }),
-      { concurrency: 10 },
-    );
-  }
 }

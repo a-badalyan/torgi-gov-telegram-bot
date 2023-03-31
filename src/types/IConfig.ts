@@ -1,8 +1,8 @@
 export interface IConfig {
   environment: 'production' | 'stage';
   port: number;
-  postgresUri: string;
   redisUri: string;
+  mongoUri: string;
   logLevel: 'debug' | 'info' | 'error';
   torgiGovBaseUrl: string;
 }

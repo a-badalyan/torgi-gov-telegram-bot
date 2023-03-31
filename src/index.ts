@@ -1,31 +1,16 @@
 import { Queue, Worker } from 'bullmq';
 import Redis from 'ioredis';
-import knex from 'knex';
 import Logger from 'pino';
-import { Model } from 'objection';
 import util from 'util';
 import config from './config';
 import JobProcessor from './JobProcessor';
+import mongoose from 'mongoose';
 
 const log = Logger({
   level: config.logLevel,
 });
 
 log.level = config.logLevel;
-
-const knexClient = knex({
-  client: 'pg',
-  connection: {
-    connectionString: config.postgresUri,
-  },
-  pool: {
-    min: 0,
-    max: 20,
-    propagateCreateError: false,
-  },
-});
-
-Model.knex(knexClient);
 
 const redisClient = new Redis(config.redisUri, {
   maxRetriesPerRequest: null,
@@ -66,8 +51,12 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 (async () => {
+  mongoose
+    .connect(config.mongoUri, {})
+    .then(() => log.info('connected_to_mongodb'))
+    .catch((err) => console.error(err));
+
   await jobProcessor.start();
 
-  // FIXME: empty comment
   log.info({ msg: 'service_started' });
 })();
