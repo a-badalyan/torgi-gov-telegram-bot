@@ -18,7 +18,11 @@ export default async function getDailyNotices(
     data.listObjects.map((notice) => async (): Promise<void> => {
       const body: GetNoticeJobBody = { href: notice.href };
 
-      await this.bullQueues[GET_NOTICE].add(GET_NOTICE, body);
+      await this.bullQueues[GET_NOTICE].add(GET_NOTICE, body, {
+        jobId: notice.regNum,
+        removeOnComplete: 500,
+        removeOnFail: false,
+      });
     }),
     { concurrency: 30 },
   );

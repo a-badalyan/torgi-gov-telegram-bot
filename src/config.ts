@@ -8,24 +8,14 @@ const getConfig = (): IConfig => {
       environment: env
         .get('ENVIRONMENT')
         .required()
-        .default('stage')
         .asEnum(['stage', 'production']),
       logLevel: env
         .get('LOG_LEVEL')
         .required()
-        .default('debug')
         .asEnum(['debug', 'info', 'error']),
       port: env.get('PORT').required().default(3000).asPortNumber(),
-      mongoUri: env
-        .get('MONGO_URI')
-        .default('http://bad-url')
-        .required()
-        .asUrlString(),
-      redisUri: env
-        .get('REDIS_URI')
-        .default('http://bad-url')
-        .required()
-        .asUrlString(),
+      mongoUri: env.get('MONGO_URI').required().asUrlString(),
+      redisUri: env.get('REDIS_URI').required().asUrlString(),
       torgiGovBaseUrl: env
         .get('TORGI_GOV_BASE_URL')
         .default('https://torgi.gov.ru/')

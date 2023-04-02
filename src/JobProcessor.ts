@@ -7,28 +7,30 @@ import IJobProcessor from './types/IJobProcessor';
 import getMeta from './workers/getMeta';
 import getDailyNotices from './workers/getDailyNotices';
 import getNotice from './workers/getNotice';
+import Db from './Db';
 
 export default class JobProcessor implements IJobProcessor {
   log: Logger;
-
+  db: Db;
   redisClient: Redis;
-
   bullQueues: Record<string, Queue>;
-
   bullWorkers: Record<string, Worker>;
 
   constructor({
     log,
+    db,
     redisClient,
     bullQueues,
     bullWorkers,
   }: {
     log: Logger;
+    db: Db;
     redisClient: Redis;
     bullQueues: Record<string, Queue>;
     bullWorkers: Record<string, Worker>;
   }) {
     this.log = log;
+    this.db = db;
     this.redisClient = redisClient;
     this.bullQueues = bullQueues;
     this.bullWorkers = bullWorkers;
@@ -81,5 +83,16 @@ export default class JobProcessor implements IJobProcessor {
         removeOnComplete: 100,
       },
     );
+
+    Object.values(this.bullWorkers).forEach((worker) => {
+      worker.on('error', (job) => {
+        this.log.error({
+          msg: `job_error`,
+          job_name: job.name,
+          job: job.message,
+          job_id: job.stack,
+        });
+      });
+    });
   }
 }

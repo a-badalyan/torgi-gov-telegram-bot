@@ -30,7 +30,9 @@ export default async function getMeta(this: IJobProcessor): Promise<void> {
           href: notificication.source,
         };
 
-        await this.bullQueues[GET_DAILY_NOTICES].add(GET_DAILY_NOTICES, body);
+        await this.bullQueues[GET_DAILY_NOTICES].add(GET_DAILY_NOTICES, body, {
+          jobId: notificication.provenance,
+        });
       }),
     { concurrency: 30 },
   );
