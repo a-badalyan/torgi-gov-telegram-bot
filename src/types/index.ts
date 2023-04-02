@@ -92,16 +92,13 @@ export type LotType = {
   biddingObjectInfo: {
     subjectRF: { code: number; name: string };
     estateAddress: string;
-    // category: { code: '304'; name: 'Земли лесного фонда' };
     category: { code: string; name: string };
     isCompound: boolean;
-    // ownershipForms: { code: '12'; name: 'Федеральная собственность' };
     ownershipForms: { code: string; name: string };
     characteristics: Array<{
       code: string;
       name: string;
       characteristicValue: any;
-      // OKEI?: { code: '055'; name: 'Квадратный метр' };
       OKEI?: { code: string; name: string } | null;
     }>;
   };
@@ -123,12 +120,9 @@ export type NoticeResponse = {
         commonInfo: {
           noticeNumber: string;
           biddType: {
-            // TODO: enum
-            // code: '200FZ';
             code: string;
             name: string;
           };
-          // biddForm: { code: 'EA'; name: 'Электронный аукцион' };
           biddForm: { code: string; name: string };
           publishDate: string;
           procedureName: string;
@@ -179,4 +173,8 @@ export type NoticeResponse = {
       };
     };
   };
+};
+
+export type DbNotification = {
+  noticeNumber: string;
 };

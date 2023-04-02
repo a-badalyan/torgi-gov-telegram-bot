@@ -4,7 +4,9 @@ import Logger from 'pino';
 import util from 'util';
 import config from './config';
 import JobProcessor from './JobProcessor';
-import mongoose from 'mongoose';
+import { MongoClient } from 'mongodb';
+import Db from './Db';
+import { HttpServer } from './HttpServer';
 
 const log = Logger({
   level: config.logLevel,
@@ -26,11 +28,18 @@ redisClient.on('error', (error: unknown) => {
 
 redisClient.setMaxListeners(50);
 
+const db = new Db({
+  client: new MongoClient(config.mongoUri),
+  dbName: 'MyProject',
+  collectionName: 'Notifications',
+});
+
 const bullQueues: Record<string, Queue> = {};
 const bullWorkers: Record<string, Worker> = {};
 
 const jobProcessor = new JobProcessor({
   log,
+  db,
   bullQueues,
   bullWorkers,
   redisClient,
@@ -50,12 +59,15 @@ process.on('unhandledRejection', (reason, promise) => {
   process.exit(1);
 });
 
-(async () => {
-  mongoose
-    .connect(config.mongoUri, {})
-    .then(() => log.info('connected_to_mongodb'))
-    .catch((err) => console.error(err));
+const httpServer = new HttpServer({
+  log,
+  port: config.port,
+  bullQueues,
+});
 
+(async () => {
+  await db.connect();
+  await httpServer.start();
   await jobProcessor.start();
 
   log.info({ msg: 'service_started' });
