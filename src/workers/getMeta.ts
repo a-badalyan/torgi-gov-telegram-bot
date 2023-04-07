@@ -22,7 +22,8 @@ export default async function getMeta(this: IJobProcessor): Promise<void> {
 
   await pAll(
     data.data
-      .filter((n) => n.created === today)
+      // .filter((n) => n.created === today)
+      .slice(data.data.length - 2, data.data.length)
       .map((notificication) => async (): Promise<void> => {
         this.log.info({ msg: `notification_${notificication.created}_pushed` });
 

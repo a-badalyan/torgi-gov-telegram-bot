@@ -3,6 +3,7 @@ import { Job } from 'bullmq';
 
 import IJobProcessor from '../types/IJobProcessor';
 import { GetNoticeJobBody, NoticeResponse } from '../types';
+import { toAdvancedNotification } from '../modifiers/toAdvancedNotification';
 
 export default async function getNotice(
   this: IJobProcessor,
@@ -18,7 +19,7 @@ export default async function getNotice(
 
   const notification = data.exportObject.structuredObject.notice;
 
-  await this.db.collection.insertOne(notification);
+  await this.db.notificationCollection.insertOne(toAdvancedNotification(data));
 
   this.log.info({
     msg: `notification_${notification.commonInfo.noticeNumber}_added`,

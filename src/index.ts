@@ -31,7 +31,6 @@ redisClient.setMaxListeners(50);
 const db = new Db({
   client: new MongoClient(config.mongoUri),
   dbName: 'MyProject',
-  collectionName: 'Notifications',
 });
 
 const bullQueues: Record<string, Queue> = {};

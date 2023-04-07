@@ -126,7 +126,7 @@ export type NoticeResponse = {
           biddForm: { code: string; name: string };
           publishDate: string;
           procedureName: string;
-          etp: {
+          etp?: {
             code: string;
             name: string;
           };
@@ -175,6 +175,51 @@ export type NoticeResponse = {
   };
 };
 
-export type DbNotification = {
+export type DbNotificationCommon = {
   noticeNumber: string;
+  bidderOrg: string;
+  procedureName: string;
+  biddType: string;
+  biddForm: string;
+  publishDate: string;
+  href: string;
 };
+
+export type DbLot = {
+  lotNumber: number;
+  lotStatus: string;
+  lotName: string;
+  lotDescription: string;
+  priceMin?: string | null;
+  priceStep?: string | null;
+  deposit?: string | null;
+  currency: string;
+  subjectRF: string;
+  estateAddress: string;
+  category: string;
+  characteristics: Array<{
+    name: string;
+    characteristicValue: any;
+    OKEI?: string | null;
+  }>;
+};
+
+export type DbNotificationAdvanced = DbNotificationCommon & {
+  lots?: Array<DbLot>;
+  biddConditions: {
+    biddStartTime: string;
+    biddEndTime: string;
+    biddReviewDate: string;
+    startDate: string;
+  };
+  contactInfo: {
+    contPerson: string;
+    tel: string;
+    email: string;
+  };
+};
+
+export enum Collections {
+  NOTIFICATIONS = 'notifications',
+  CIENTS = 'clients',
+}

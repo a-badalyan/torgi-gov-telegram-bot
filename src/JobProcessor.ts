@@ -41,6 +41,14 @@ export default class JobProcessor implements IJobProcessor {
 
     this.bullQueues[GET_DAILY_NOTICES] = new Queue(GET_DAILY_NOTICES, {
       connection,
+      defaultJobOptions: {
+        attempts: 5,
+        removeOnFail: false,
+        backoff: {
+          delay: 10 * 1000,
+          type: 'fixed',
+        },
+      },
     });
 
     this.bullWorkers[GET_DAILY_NOTICES] = new Worker(
@@ -53,6 +61,14 @@ export default class JobProcessor implements IJobProcessor {
 
     this.bullQueues[GET_META] = new Queue(GET_META, {
       connection,
+      defaultJobOptions: {
+        attempts: 5,
+        removeOnFail: false,
+        backoff: {
+          delay: 10 * 1000,
+          type: 'fixed',
+        },
+      },
     });
 
     this.bullWorkers[GET_META] = new Worker(GET_META, getMeta.bind(this), {
@@ -61,6 +77,14 @@ export default class JobProcessor implements IJobProcessor {
 
     this.bullQueues[GET_NOTICE] = new Queue(GET_NOTICE, {
       connection,
+      defaultJobOptions: {
+        attempts: 5,
+        removeOnFail: false,
+        backoff: {
+          delay: 10 * 1000,
+          type: 'fixed',
+        },
+      },
     });
 
     this.bullWorkers[GET_NOTICE] = new Worker(

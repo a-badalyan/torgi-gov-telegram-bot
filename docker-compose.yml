@@ -5,10 +5,11 @@ services:
     image: node:16
     environment:
       ENVIRONMENT: stage
+      LOG_LEVEL: debug
       PORT: 3000
       MONGO_URI: mongodb://root:example@mongo:27017/
       REDIS_URI: redis:6379
-      LOG_LEVEL: debug
+      DATABASE_NAME: notifications
     stdin_open: true
     tty: true
     volumes:
