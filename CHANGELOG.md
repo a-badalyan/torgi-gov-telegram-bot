@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.3.0...v1.3.1) (2023-04-07)
+
+
+### fix
+
+* empty comment ([0f258a6](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/0f258a6858b6dcccc418ff034c07fb1aec57ee68))
+* workflow ([7fefc22](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/7fefc2213ee5127579287621a3237b281c454d43))
+
 # [1.3.0](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.2.1...v1.3.0) (2023-04-07)
 
 
