@@ -33,8 +33,5 @@ jobs:
             conventional-changelog-conventionalcommits@4.6.3
             conventional-changelog-eslint@3.0.9
 
-      - name: Update version in package.json
-        uses: maks-stupak/gh-action-bump-version@v7.1.5
-
         env:
           GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
