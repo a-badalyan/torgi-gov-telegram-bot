@@ -16,6 +16,7 @@ export default class Db implements IDb {
       .collection(Collections.NOTIFICATIONS);
   }
 
+  // comment
   async connect(): Promise<void> {
     await this.client.connect();
 
