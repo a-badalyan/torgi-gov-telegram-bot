@@ -5,4 +5,6 @@ export interface IConfig {
   mongoUri: string;
   logLevel: 'debug' | 'info' | 'error';
   torgiGovBaseUrl: string;
+  databaseName: string;
+  telegramToken: string;
 }

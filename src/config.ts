@@ -15,6 +15,7 @@ const getConfig = (): IConfig => {
         .asEnum(['debug', 'info', 'error']),
       port: env.get('PORT').required().default(3000).asPortNumber(),
       mongoUri: env.get('MONGO_URI').required().asUrlString(),
+      telegramToken: env.get('TELEGRAM_TOKEN').required().asString(),
       databaseName: env.get('DATABASE_NAME').required().asString(),
       redisUri: env.get('REDIS_URI').required().asUrlString(),
       torgiGovBaseUrl: env

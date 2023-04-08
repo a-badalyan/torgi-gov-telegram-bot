@@ -7,7 +7,6 @@ import JobProcessor from './JobProcessor';
 import { MongoClient } from 'mongodb';
 import Db from './Db';
 import { HttpServer } from './HttpServer';
-import initBot from './TelegramClient';
 import TelegramBot from 'node-telegram-bot-api';
 import TelegramClient from './TelegramClient';
 
@@ -33,7 +32,15 @@ redisClient.setMaxListeners(50);
 
 const db = new Db({
   client: new MongoClient(config.mongoUri),
-  dbName: 'MyProject',
+  dbName: config.databaseName,
+});
+
+const bot = new TelegramBot(config.telegramToken, { polling: true });
+
+const telegramClient = new TelegramClient({
+  log,
+  bot,
+  db,
 });
 
 const bullQueues: Record<string, Queue> = {};
@@ -42,6 +49,7 @@ const bullWorkers: Record<string, Worker> = {};
 const jobProcessor = new JobProcessor({
   log,
   db,
+  telegramClient,
   bullQueues,
   bullWorkers,
   redisClient,
@@ -67,22 +75,11 @@ const httpServer = new HttpServer({
   bullQueues,
 });
 
-const token = '5875153455:AAEnyi7AgYPbO9UiBtVXDfig67hLPuUxh_g';
-
-const bot = new TelegramBot(token, { polling: true });
-
-const tgClient = new TelegramClient({
-  log,
-  bot,
-  db,
-});
-
 (async () => {
   await db.connect();
   await httpServer.start();
-  // await jobProcessor.start();
-
-  await tgClient.init();
+  await jobProcessor.start();
+  await telegramClient.init();
 
   log.info({ msg: 'service_started' });
 })();

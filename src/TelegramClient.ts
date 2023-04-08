@@ -28,14 +28,20 @@ export default class TelegramClient {
       const client = msg.from;
 
       if (!client) {
+        this.log.warn({ msg: 'missing_client' });
+
         return;
       }
 
       if (client.is_bot) {
+        this.log.error({ msg: 'bots_prohibited' });
+
         return;
       }
 
       if (text === TGCommands.START) {
+        this.log.info({ msg: 'got_start_command' });
+
         this.bot.sendMessage(client.id, 'Вступительное сообщение');
 
         const dbClient = await this.db.clientCollection.findOne({
@@ -53,11 +59,12 @@ export default class TelegramClient {
           );
         }
 
-        return this.db.clientCollection.insertOne({
+        return await this.db.clientCollection.insertOne({
           telegramId: client.id,
           firstFame: client.first_name,
           lastName: client.last_name,
           username: client.username,
+          filters: [],
           isActive: true,
           createdAt: new Date(),
           updatedAt: new Date(),

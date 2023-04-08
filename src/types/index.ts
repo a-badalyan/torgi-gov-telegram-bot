@@ -224,6 +224,7 @@ export type DbClient = {
   firstFame: string;
   lastName?: string | null;
   username?: string | null;
+  filters: Array<{ field: string; value: string }>;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

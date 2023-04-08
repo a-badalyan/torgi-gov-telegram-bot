@@ -8,11 +8,13 @@ import getMeta from './workers/getMeta';
 import getDailyNotices from './workers/getDailyNotices';
 import getNotice from './workers/getNotice';
 import Db from './Db';
+import TelegramClient from './TelegramClient';
 
 export default class JobProcessor implements IJobProcessor {
   log: Logger;
   db: Db;
   redisClient: Redis;
+  telegramClient: TelegramClient;
   bullQueues: Record<string, Queue>;
   bullWorkers: Record<string, Worker>;
 
@@ -20,18 +22,21 @@ export default class JobProcessor implements IJobProcessor {
     log,
     db,
     redisClient,
+    telegramClient,
     bullQueues,
     bullWorkers,
   }: {
     log: Logger;
     db: Db;
     redisClient: Redis;
+    telegramClient: TelegramClient;
     bullQueues: Record<string, Queue>;
     bullWorkers: Record<string, Worker>;
   }) {
     this.log = log;
     this.db = db;
     this.redisClient = redisClient;
+    this.telegramClient = telegramClient;
     this.bullQueues = bullQueues;
     this.bullWorkers = bullWorkers;
   }
