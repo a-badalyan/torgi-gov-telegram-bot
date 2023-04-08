@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.3.1...v1.4.0) (2023-04-08)
+
+
+### feat
+
+* add telegram bot client ([6d7a556](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/6d7a5560cf0757d2de47093276532143c0625bb8))
+
 ## [1.3.1](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.3.0...v1.3.1) (2023-04-07)
 
 
