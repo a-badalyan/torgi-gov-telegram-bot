@@ -7,6 +7,9 @@ import JobProcessor from './JobProcessor';
 import { MongoClient } from 'mongodb';
 import Db from './Db';
 import { HttpServer } from './HttpServer';
+import initBot from './TelegramClient';
+import TelegramBot from 'node-telegram-bot-api';
+import TelegramClient from './TelegramClient';
 
 const log = Logger({
   level: config.logLevel,
@@ -64,10 +67,22 @@ const httpServer = new HttpServer({
   bullQueues,
 });
 
+const token = '5875153455:AAEnyi7AgYPbO9UiBtVXDfig67hLPuUxh_g';
+
+const bot = new TelegramBot(token, { polling: true });
+
+const tgClient = new TelegramClient({
+  log,
+  bot,
+  db,
+});
+
 (async () => {
   await db.connect();
   await httpServer.start();
-  await jobProcessor.start();
+  // await jobProcessor.start();
+
+  await tgClient.init();
 
   log.info({ msg: 'service_started' });
 })();

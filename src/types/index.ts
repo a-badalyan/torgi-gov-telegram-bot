@@ -219,7 +219,22 @@ export type DbNotificationAdvanced = DbNotificationCommon & {
   };
 };
 
+export type DbClient = {
+  telegramId: number;
+  firstFame: string;
+  lastName?: string | null;
+  username?: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export enum Collections {
   NOTIFICATIONS = 'notifications',
-  CIENTS = 'clients',
+  CLIENTS = 'clients',
+}
+
+export enum TGCommands {
+  START = '/start',
+  INFO = '/info',
 }

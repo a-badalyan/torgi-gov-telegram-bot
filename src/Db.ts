@@ -1,12 +1,13 @@
 import { Collection, MongoClient } from 'mongodb';
 
 import IDb from './types/IDb';
-import { Collections, DbNotificationAdvanced } from './types';
+import { Collections, DbClient, DbNotificationAdvanced } from './types';
 
 export default class Db implements IDb {
   client: MongoClient;
   dbName: string;
   notificationCollection: Collection<DbNotificationAdvanced>;
+  clientCollection: Collection<DbClient>;
 
   constructor({ client, dbName }: { client: MongoClient; dbName: string }) {
     this.client = client;
@@ -14,15 +15,18 @@ export default class Db implements IDb {
     this.notificationCollection = this.client
       .db(this.dbName)
       .collection(Collections.NOTIFICATIONS);
+    this.clientCollection = this.client
+      .db(this.dbName)
+      .collection(Collections.CLIENTS);
   }
 
-  // comment
   async connect(): Promise<void> {
     await this.client.connect();
 
     this.client.db(this.dbName);
 
     await this.notificationCollection.createIndex({ '$**': 'text' });
+    await this.clientCollection.createIndex({ telegramId: 1 });
   }
 
   async disconnect(): Promise<void> {
