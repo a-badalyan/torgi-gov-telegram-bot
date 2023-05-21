@@ -18,6 +18,7 @@ export default class TelegramClient {
     log,
     db,
     bot,
+    torgiGovClient,
   }: {
     log: Logger;
     db: Db;
@@ -27,7 +28,7 @@ export default class TelegramClient {
     this.log = log;
     this.db = db;
     this.bot = bot;
-    this.torgiGovClient = this.torgiGovClient;
+    this.torgiGovClient = torgiGovClient;
     this.modifier = null;
   }
 

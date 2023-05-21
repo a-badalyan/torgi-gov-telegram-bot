@@ -45,9 +45,3 @@ export default class TorgiGovClient {
     );
   }
 }
-
-const bla = new TorgiGovClient();
-
-(async () => {
-  console.log(await bla.getSubjects());
-})();
