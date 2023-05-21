@@ -51,6 +51,15 @@ export type GetNoticeJobBody = {
   href: string;
 };
 
+export type PrepareTelegramNotificationJobBody = {
+  notice: DbNotificationAdvanced;
+};
+
+export type SendTelegramNotificationJobBody = {
+  telegramId: number;
+  notice: DbNotificationCommon;
+};
+
 export type AddLotJob = {
   noticeNumber: string;
   lot: LotType;
@@ -219,12 +228,22 @@ export type DbNotificationAdvanced = DbNotificationCommon & {
   };
 };
 
+export enum ClientFiltersFields {
+  SUBJECT_RF = 'subjectRF',
+  BID_TYPE = 'bidType',
+}
+
+export type ClientFilters = Array<{
+  field: ClientFiltersFields;
+  value: string;
+}>;
+
 export type DbClient = {
   telegramId: number;
   firstFame: string;
   lastName?: string | null;
   username?: string | null;
-  filters: Array<{ field: string; value: string }>;
+  filters: ClientFilters;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -238,4 +257,6 @@ export enum Collections {
 export enum TGCommands {
   START = '/start',
   INFO = '/info',
+  SET_REGION = '/set_region',
+  SET_NOTICE_TYPE = '/set_notice_type',
 }

@@ -4,6 +4,7 @@ import { Job } from 'bullmq';
 import IJobProcessor from '../types/IJobProcessor';
 import { GetNoticeJobBody, NoticeResponse } from '../types';
 import { toAdvancedNotification } from '../modifiers/toAdvancedNotification';
+import { PREPARE_TELEGRAM_NOTIFICATION } from '../constants';
 
 export default async function getNotice(
   this: IJobProcessor,
@@ -17,11 +18,13 @@ export default async function getNotice(
     },
   );
 
-  const notification = data.exportObject.structuredObject.notice;
+  const notice = toAdvancedNotification(data);
 
-  await this.db.notificationCollection.insertOne(toAdvancedNotification(data));
+  await this.db.notificationCollection.insertOne(notice);
 
-  this.log.info({
-    msg: `notification_${notification.commonInfo.noticeNumber}_added`,
-  });
+  await this.bullQueues[PREPARE_TELEGRAM_NOTIFICATION].add(
+    PREPARE_TELEGRAM_NOTIFICATION,
+    { notice },
+    { jobId: notice.noticeNumber },
+  );
 }

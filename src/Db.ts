@@ -12,9 +12,11 @@ export default class Db implements IDb {
   constructor({ client, dbName }: { client: MongoClient; dbName: string }) {
     this.client = client;
     this.dbName = dbName;
+
     this.notificationCollection = this.client
       .db(this.dbName)
       .collection(Collections.NOTIFICATIONS);
+
     this.clientCollection = this.client
       .db(this.dbName)
       .collection(Collections.CLIENTS);
@@ -27,6 +29,12 @@ export default class Db implements IDb {
 
     await this.notificationCollection.createIndex({ '$**': 'text' });
     await this.clientCollection.createIndex({ telegramId: 1 });
+  }
+
+  async migrate(): Promise<void> {
+    // TODO
+
+    return;
   }
 
   async disconnect(): Promise<void> {
