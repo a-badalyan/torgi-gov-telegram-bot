@@ -9,6 +9,7 @@ import Db from './Db';
 import { HttpServer } from './HttpServer';
 import TelegramBot from 'node-telegram-bot-api';
 import TelegramClient from './TelegramClient';
+import TorgiGovClient from './TorgiGovClient';
 
 const log = Logger({
   level: config.logLevel,
@@ -36,11 +37,13 @@ const db = new Db({
 });
 
 const bot = new TelegramBot(config.telegramToken, { polling: true });
+const torgiGovClient = new TorgiGovClient();
 
 const telegramClient = new TelegramClient({
   log,
   bot,
   db,
+  torgiGovClient,
 });
 
 const bullQueues: Record<string, Queue> = {};
@@ -53,6 +56,7 @@ const jobProcessor = new JobProcessor({
   bullQueues,
   bullWorkers,
   redisClient,
+  torgiGovClient,
 });
 
 jobProcessor.installJobsAndWorkers();

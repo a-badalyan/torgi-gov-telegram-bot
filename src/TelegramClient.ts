@@ -5,29 +5,40 @@ import pAll from 'p-all';
 
 import { ClientFiltersFields, TGCommands } from './types';
 
-// TODO: from migration / seed
-import subjects from '../.vscode/subjects';
-import bidTypes from '../.vscode/bidTypes';
+import TorgiGovClient from './TorgiGovClient';
 
 export default class TelegramClient {
   log: Logger;
   db: Db;
   bot: TelegramBot;
+  torgiGovClient: TorgiGovClient;
   modifier: string | null;
 
-  constructor({ log, db, bot }: { log: Logger; db: Db; bot: TelegramBot }) {
+  constructor({
+    log,
+    db,
+    bot,
+  }: {
+    log: Logger;
+    db: Db;
+    bot: TelegramBot;
+    torgiGovClient: TorgiGovClient;
+  }) {
     this.log = log;
     this.db = db;
     this.bot = bot;
+    this.torgiGovClient = this.torgiGovClient;
     this.modifier = null;
   }
 
   async init(): Promise<void> {
+    const subjects = await this.torgiGovClient.getSubjects();
+    const bidTypes = await this.torgiGovClient.getBidTypes();
+
     await this.bot.setMyCommands([
-      { command: TGCommands.START, description: 'Начальное приветствие' },
       {
         command: TGCommands.INFO,
-        description: 'Получить информацию о пользователе',
+        description: 'Получить информацию о фильтрах',
       },
       {
         command: TGCommands.SET_REGION,
@@ -50,15 +61,11 @@ export default class TelegramClient {
       }
 
       if (client.is_bot) {
-        this.log.error({ msg: 'bots_prohibited' });
-
         return;
       }
 
       if (text === TGCommands.START) {
         this.log.info({ msg: 'got_start_command' });
-
-        await this.bot.sendMessage(client.id, 'Вступительное сообщение');
 
         const dbClient = await this.db.clientCollection.findOne({
           telegramId: client.id,
@@ -87,12 +94,43 @@ export default class TelegramClient {
         });
       }
 
+      if (text === TGCommands.INFO) {
+        const dbClient = await this.db.clientCollection.findOne({
+          telegramId: client.id,
+        });
+
+        if (!dbClient) {
+          return;
+        }
+
+        const subjectRF = dbClient.filters.find(
+          (filter) => filter.field === ClientFiltersFields.SUBJECT_RF,
+        );
+
+        const bidTypes = dbClient.filters.find(
+          (filter) => filter.field === ClientFiltersFields.BID_TYPE,
+        );
+
+        const clientInfo =
+          `Ваши фильтры:\n` +
+          `${subjectRF && 'Регион: ' + subjectRF.value}\n` +
+          `${
+            bidTypes == null
+              ? 'Выбраны все виды торгов'
+              : 'Тип торгов: ' + bidTypes.value
+          }`;
+
+        await this.bot.sendMessage(client.id, clientInfo);
+      }
+
       if (text === TGCommands.SET_REGION) {
         this.modifier = 'set_region';
 
+        const keyboard = subjects.map((subject) => [{ text: subject }]);
+
         await this.bot.sendMessage(client.id, 'Выберите регион', {
           reply_markup: {
-            keyboard: subjects.map((i) => [{ text: i.regionSubject.name }]),
+            keyboard,
             one_time_keyboard: true,
           },
         });
@@ -101,19 +139,17 @@ export default class TelegramClient {
       if (text === TGCommands.SET_NOTICE_TYPE) {
         this.modifier = 'set_notice_type';
 
+        const keyboard = bidTypes.map((bidType) => [{ text: bidType }]);
+
         await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
           reply_markup: {
-            keyboard: subjects.map((i) => [{ text: i.regionSubject.name }]),
+            keyboard,
             one_time_keyboard: true,
           },
         });
       }
 
-      if (
-        text &&
-        this.modifier === 'set_region' &&
-        subjects.map((s) => s.regionSubject.name).includes(text)
-      ) {
+      if (text && this.modifier === 'set_region' && subjects.includes(text)) {
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },
           {
@@ -124,12 +160,14 @@ export default class TelegramClient {
           },
         );
 
+        const keyboard = [
+          [{ text: 'Выбрать все' }],
+          ...bidTypes.map((bidType) => [{ text: bidType }]),
+        ];
+
         await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
           reply_markup: {
-            keyboard: [
-              [{ text: 'Выбрать все' }],
-              ...bidTypes.map((i) => [{ text: i.biddType.name }]),
-            ],
+            keyboard,
             one_time_keyboard: true,
           },
         });
@@ -140,7 +178,7 @@ export default class TelegramClient {
       if (
         text &&
         this.modifier === 'set_notice_type' &&
-        bidTypes.map((s) => s.biddType.name).includes(text)
+        bidTypes.includes(text)
       ) {
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },
@@ -174,8 +212,8 @@ export default class TelegramClient {
           return;
         }
 
-        const messages = notice.lots?.map((lot) => {
-          const preparedLot =
+        const messages = notice.lots?.map(
+          (lot) =>
             `Наименование лота: ${lot.lotName}\n` +
             `Описание: ${lot.lotDescription}\n` +
             `Начальная цена: ${lot.priceMin ?? ''}\n` +
@@ -184,10 +222,8 @@ export default class TelegramClient {
             `Валюта: ${lot.currency}\n` +
             `Субъект РФ: ${lot.subjectRF}\n` +
             `Адрес: ${lot.estateAddress}\n` +
-            `Категория лота: ${lot.category}`;
-
-          return preparedLot;
-        });
+            `Категория лота: ${lot.category}`,
+        );
 
         if (messages) {
           await pAll(

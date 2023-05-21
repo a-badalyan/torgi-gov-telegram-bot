@@ -260,3 +260,37 @@ export enum TGCommands {
   SET_REGION = '/set_region',
   SET_NOTICE_TYPE = '/set_notice_type',
 }
+
+export type BidTypes = {
+  exportObject: {
+    structuredObject: {
+      masterData: {
+        schemeVersion: string;
+        NSI: Array<{
+          biddType: {
+            code: string;
+            name: string;
+          };
+        }>;
+      };
+    };
+  };
+};
+
+export type Subjects = {
+  exportObject: {
+    structuredObject: {
+      masterData: {
+        schemeVersion: string;
+        NSI: Array<{
+          regionSubject: {
+            code: string;
+            name: string;
+            OKATO: string;
+            published: boolean;
+          };
+        }>;
+      };
+    };
+  };
+};

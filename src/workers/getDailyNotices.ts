@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Job } from 'bullmq';
 import IJobProcessor from '../types/IJobProcessor';
 import { DailyNotices, GetNoticeJobBody } from '../types';
@@ -10,7 +10,7 @@ export default async function getDailyNotices(
   job: Job<GetNoticeJobBody>,
 ): Promise<void> {
   this.log.info({ msg: 'notice_job_start' });
-  const { data }: AxiosResponse<DailyNotices> = await axios.get(job.data.href, {
+  const { data } = await axios.get<DailyNotices>(job.data.href, {
     timeout: 10 * 1000,
   });
 

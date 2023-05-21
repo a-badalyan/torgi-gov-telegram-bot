@@ -17,12 +17,14 @@ import sendTelegramNotification from './workers/sendTelegramNotification';
 import Db from './Db';
 import TelegramClient from './TelegramClient';
 import prepareTelegramNotification from './workers/prepareTelegramNotification';
+import TorgiGovClient from './TorgiGovClient';
 
 export default class JobProcessor implements IJobProcessor {
   log: Logger;
   db: Db;
   redisClient: Redis;
   telegramClient: TelegramClient;
+  torgiGovClient: TorgiGovClient;
   bullQueues: Record<string, Queue>;
   bullWorkers: Record<string, Worker>;
 
@@ -31,6 +33,7 @@ export default class JobProcessor implements IJobProcessor {
     db,
     redisClient,
     telegramClient,
+    torgiGovClient,
     bullQueues,
     bullWorkers,
   }: {
@@ -38,6 +41,7 @@ export default class JobProcessor implements IJobProcessor {
     db: Db;
     redisClient: Redis;
     telegramClient: TelegramClient;
+    torgiGovClient: TorgiGovClient;
     bullQueues: Record<string, Queue>;
     bullWorkers: Record<string, Worker>;
   }) {
@@ -45,6 +49,7 @@ export default class JobProcessor implements IJobProcessor {
     this.db = db;
     this.redisClient = redisClient;
     this.telegramClient = telegramClient;
+    this.torgiGovClient = torgiGovClient;
     this.bullQueues = bullQueues;
     this.bullWorkers = bullWorkers;
   }
