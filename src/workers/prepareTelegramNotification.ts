@@ -3,11 +3,13 @@ import { Job } from 'bullmq';
 import IJobProcessor from '../types/IJobProcessor';
 import {
   ClientFiltersFields,
+  DbClient,
   PrepareTelegramNotificationJobBody,
   SendTelegramNotificationJobBody,
 } from '../types';
 import pAll from 'p-all';
 import { SEND_TELEGRAM_NOTIFICATION } from '../constants';
+import { Filter } from 'mongodb';
 
 export default async function prepareTelegramNotification(
   this: IJobProcessor,
@@ -21,38 +23,27 @@ export default async function prepareTelegramNotification(
     return;
   }
 
-  const clients = await this.db.clientCollection
-    .find({
-      isActive: true,
-      $and: [
-        [
+  // TODO: filter by bidType
+
+  const query: Filter<DbClient> = {
+    isActive: true,
+    filters: {
+      $elemMatch: {
+        $and: [
           {
-            filters: {
-              $in: [
-                {
-                  field: ClientFiltersFields.BID_TYPE,
-                  value: notice.biddType,
-                },
-              ],
-            },
+            field: ClientFiltersFields.SUBJECT_RF,
+            value: notice.lots[0].subjectRF,
           },
           {
-            filters: {
-              $in: [
-                {
-                  field: ClientFiltersFields.SUBJECT_RF,
-                  value:
-                    notice.lots.length > 1
-                      ? notice.lots[0].subjectRF
-                      : 'undefined',
-                },
-              ],
-            },
+            field: ClientFiltersFields.BID_TYPE,
+            value: notice.biddType,
           },
         ],
-      ],
-    })
-    .toArray();
+      },
+    },
+  };
+
+  const clients = await this.db.clientCollection.find(query).toArray();
 
   if (clients.length > 0) {
     this.log.info({ msg: 'got_clients', length: clients.length });

@@ -10,14 +10,19 @@ export default async function getNotice(
   this: IJobProcessor,
   job: Job<GetNoticeJobBody>,
 ): Promise<void> {
-  this.log.info({ msg: 'daily_notices_job_start' });
+  this.log.info({ msg: 'get_notice' });
   const { data } = await axios.get<NoticeResponse>(job.data.href, {
     timeout: 10 * 1000,
   });
 
   const notice = toAdvancedNotification(data);
 
-  await this.db.notificationCollection.insertOne(notice);
+  try {
+    await this.db.notificationCollection.insertOne(notice);
+  } catch (err) {
+    // TODO
+    this.log.error({ msg: (err as Error).message });
+  }
 
   await this.bullQueues[PREPARE_TELEGRAM_NOTIFICATION].add(
     PREPARE_TELEGRAM_NOTIFICATION,

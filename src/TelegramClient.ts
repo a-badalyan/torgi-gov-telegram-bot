@@ -8,11 +8,11 @@ import { ClientFiltersFields, TGCommands } from './types';
 import TorgiGovClient from './TorgiGovClient';
 
 export default class TelegramClient {
-  log: Logger;
-  db: Db;
-  bot: TelegramBot;
-  torgiGovClient: TorgiGovClient;
-  modifier: string | null;
+  private readonly log: Logger;
+  private readonly db: Db;
+  private readonly torgiGovClient: TorgiGovClient;
+  private modifier: string | null;
+  public bot: TelegramBot;
 
   constructor({
     log,
@@ -33,8 +33,12 @@ export default class TelegramClient {
   }
 
   async init(): Promise<void> {
-    const subjects = await this.torgiGovClient.getSubjects();
-    const bidTypes = await this.torgiGovClient.getBidTypes();
+    const subjectsResponse = await this.torgiGovClient.getSubjects();
+    const bidTypesResponse = await this.torgiGovClient.getBidTypes();
+
+    if (subjectsResponse.status !== 'OK' || bidTypesResponse.status !== 'OK') {
+      throw new Error('unable_to_get_data');
+    }
 
     await this.bot.setMyCommands([
       {
@@ -127,7 +131,9 @@ export default class TelegramClient {
       if (text === TGCommands.SET_REGION) {
         this.modifier = 'set_region';
 
-        const keyboard = subjects.map((subject) => [{ text: subject }]);
+        const keyboard = subjectsResponse.subjects.map((subject) => [
+          { text: subject },
+        ]);
 
         await this.bot.sendMessage(client.id, 'Выберите регион', {
           reply_markup: {
@@ -140,7 +146,9 @@ export default class TelegramClient {
       if (text === TGCommands.SET_NOTICE_TYPE) {
         this.modifier = 'set_notice_type';
 
-        const keyboard = bidTypes.map((bidType) => [{ text: bidType }]);
+        const keyboard = bidTypesResponse.biddTypes.map((bidType) => [
+          { text: bidType },
+        ]);
 
         await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
           reply_markup: {
@@ -150,7 +158,11 @@ export default class TelegramClient {
         });
       }
 
-      if (text && this.modifier === 'set_region' && subjects.includes(text)) {
+      if (
+        text &&
+        this.modifier === 'set_region' &&
+        subjectsResponse.subjects.includes(text)
+      ) {
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },
           {
@@ -163,7 +175,7 @@ export default class TelegramClient {
 
         const keyboard = [
           [{ text: 'Выбрать все' }],
-          ...bidTypes.map((bidType) => [{ text: bidType }]),
+          ...bidTypesResponse.biddTypes.map((bidType) => [{ text: bidType }]),
         ];
 
         await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
@@ -179,7 +191,7 @@ export default class TelegramClient {
       if (
         text &&
         this.modifier === 'set_notice_type' &&
-        bidTypes.includes(text)
+        bidTypesResponse.biddTypes.includes(text)
       ) {
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },

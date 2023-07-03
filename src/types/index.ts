@@ -17,6 +17,43 @@ export type MetaData = {
   }>;
 };
 
+export type NSI =
+  | 'penaltyType'
+  | 'noticeChangeReason'
+  | 'contractType'
+  | 'biddType'
+  | 'structuredDocumentType'
+  | 'timeZones'
+  | 'selectNSI'
+  | 'penaltyReason'
+  | 'contractRefusalReason'
+  | 'contractTerminationFoundation'
+  | 'annulmentReasons'
+  | 'electronicPlatform'
+  | 'contractTerminationReason'
+  | 'specifications'
+  | 'paymentType'
+  | 'contractKind'
+  | 'budgetLevel'
+  | 'ownershipForms'
+  | 'refusalAdmissionReasons'
+  | 'abandonedReason'
+  | 'contractInvalidatingReason'
+  | 'cancelReason'
+  | 'attachmentType'
+  | 'stopReason'
+  | 'categories'
+  | 'regionSubject';
+
+export type MasterData = {
+  listObjects: Array<{
+    NSIType: NSI;
+    startDate: string;
+    endDate: string;
+    href: string;
+  }>;
+};
+
 type NoticeDocumentType =
   | 'noticeCancel'
   | 'notice'
@@ -293,4 +330,14 @@ export type Subjects = {
       };
     };
   };
+};
+
+export type GenericOkResponse = {
+  status: 'OK';
+};
+
+export type GenericErrorResponse = {
+  status: 'ERROR' | 'INTERNAL_ERROR';
+  error_code: string;
+  error_message?: string | null;
 };

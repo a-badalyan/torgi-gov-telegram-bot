@@ -6,7 +6,7 @@ import { GET_DAILY_NOTICES } from '../constants';
 export default async function getMeta(this: IJobProcessor): Promise<void> {
   // TOOD: get and check from DB
 
-  const data = await this.torgiGovClient.getMeta();
+  const data = await this.torgiGovClient.getMetaNotice();
 
   await pAll(
     data.data

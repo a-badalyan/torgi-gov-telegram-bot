@@ -9,7 +9,8 @@ export default async function getDailyNotices(
   this: IJobProcessor,
   job: Job<GetNoticeJobBody>,
 ): Promise<void> {
-  this.log.info({ msg: 'notice_job_start' });
+  this.log.info({ msg: 'get_daily_notices' });
+
   const { data } = await axios.get<DailyNotices>(job.data.href, {
     timeout: 10 * 1000,
   });
