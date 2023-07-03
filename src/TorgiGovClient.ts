@@ -40,6 +40,7 @@ export default class TorgiGovClient {
       const masterDataResponse = await axios.get<MasterData>(
         meta.data[0].source,
         {
+          baseURL: this.torgiGovBaseUrl,
           timeout: 10 * 1000,
         },
       );
@@ -79,6 +80,10 @@ export default class TorgiGovClient {
   private async getMetaMasterData(): Promise<MetaData> {
     const { data } = await axios.get<MetaData>(
       '7710568760-masterData/meta.json',
+      {
+        baseURL: this.torgiGovBaseUrl,
+        timeout: 10 * 1000,
+      },
     );
 
     return data;
@@ -108,6 +113,7 @@ export default class TorgiGovClient {
 
       const { data } = await axios.get<Subjects>(subjectsInfo.href, {
         timeout: 10 * 1000,
+        baseURL: this.torgiGovBaseUrl,
       });
 
       const subjects = data.exportObject.structuredObject.masterData.NSI.map(
