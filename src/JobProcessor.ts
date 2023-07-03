@@ -10,7 +10,7 @@ import {
 } from './constants';
 
 import IJobProcessor from './types/IJobProcessor';
-import getMeta from './workers/getMeta';
+import getMetaNotice from './workers/getMetaNotice';
 import getDailyNotices from './workers/getDailyNotices';
 import getNotice from './workers/getNotice';
 import sendTelegramNotification from './workers/sendTelegramNotification';
@@ -66,6 +66,7 @@ export default class JobProcessor implements IJobProcessor {
           delay: 10 * 1000,
           type: 'fixed',
         },
+        removeOnComplete: 100,
       },
     });
 
@@ -86,12 +87,17 @@ export default class JobProcessor implements IJobProcessor {
           delay: 10 * 1000,
           type: 'fixed',
         },
+        removeOnComplete: 100,
       },
     });
 
-    this.bullWorkers[GET_META] = new Worker(GET_META, getMeta.bind(this), {
-      connection,
-    });
+    this.bullWorkers[GET_META] = new Worker(
+      GET_META,
+      getMetaNotice.bind(this),
+      {
+        connection,
+      },
+    );
 
     this.bullQueues[GET_NOTICE] = new Queue(GET_NOTICE, {
       connection,
@@ -124,6 +130,7 @@ export default class JobProcessor implements IJobProcessor {
             delay: 10 * 1000,
             type: 'fixed',
           },
+          removeOnComplete: 100,
         },
       },
     );
@@ -147,6 +154,7 @@ export default class JobProcessor implements IJobProcessor {
             delay: 10 * 1000,
             type: 'fixed',
           },
+          removeOnComplete: 100,
         },
       },
     );

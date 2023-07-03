@@ -20,15 +20,10 @@ const getConfig = (): IConfig => {
       redisUri: env.get('REDIS_URI').required().asUrlString(),
       torgiGovBaseUrl: env
         .get('TORGI_GOV_BASE_URL')
-        .default('https://torgi.gov.ru/')
+        .default('https://torgi.gov.ru/new/opendata/')
         .required()
         .asUrlString(),
     };
-
-    if (config === null) {
-      console.error({ msg: 'misconfiguration', error_message: 'empty config' });
-      process.exit(1);
-    }
 
     return config;
   } catch (error: unknown) {

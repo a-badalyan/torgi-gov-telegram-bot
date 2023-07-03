@@ -36,12 +36,13 @@ const db = new Db({
   dbName: config.databaseName,
 });
 
-const bot = new TelegramBot(config.telegramToken, { polling: true });
-const torgiGovClient = new TorgiGovClient();
+const torgiGovClient = new TorgiGovClient({
+  torgiGovBaseUrl: config.torgiGovBaseUrl,
+});
 
 const telegramClient = new TelegramClient({
   log,
-  bot,
+  bot: new TelegramBot(config.telegramToken, { polling: true }),
   db,
   torgiGovClient,
 });
