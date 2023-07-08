@@ -2,7 +2,6 @@ import { Job } from 'bullmq';
 
 import IJobProcessor from '../types/IJobProcessor';
 import {
-  ClientFiltersFields,
   DbClient,
   PrepareTelegramNotificationJobBody,
   SendTelegramNotificationJobBody,
@@ -27,20 +26,8 @@ export default async function prepareTelegramNotification(
 
   const query: Filter<DbClient> = {
     isActive: true,
-    filters: {
-      $elemMatch: {
-        $and: [
-          {
-            field: ClientFiltersFields.SUBJECT_RF,
-            value: notice.lots[0].subjectRF,
-          },
-          {
-            field: ClientFiltersFields.BID_TYPE,
-            value: notice.biddType,
-          },
-        ],
-      },
-    },
+    bidTypes: notice.biddType,
+    subjectsRF: notice.lots[0].subjectRF,
   };
 
   const clients = await this.db.clientCollection.find(query).toArray();

@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "start:dev": "node --inspect=0.0.0.0:9229 index.js",
     "prettier": "prettier './src/**/*.ts' --write",
     "test": "npm run lint",
     "build": "rm -rf dist/ && tsc --build",

@@ -3,7 +3,7 @@ import Db from './Db';
 import { Logger } from 'pino';
 import pAll from 'p-all';
 
-import { ClientFiltersFields, TGCommands } from './types';
+import { TGCommands } from './types';
 
 import TorgiGovClient from './TorgiGovClient';
 
@@ -37,6 +37,7 @@ export default class TelegramClient {
     const bidTypesResponse = await this.torgiGovClient.getBidTypes();
 
     if (subjectsResponse.status !== 'OK' || bidTypesResponse.status !== 'OK') {
+      console.log({ subjectsResponse, bidTypesResponse });
       throw new Error('unable_to_get_data');
     }
 
@@ -77,6 +78,8 @@ export default class TelegramClient {
         });
 
         if (dbClient) {
+          this.log.info({ msg: 'got_client', client: dbClient });
+
           if (dbClient.isActive) {
             return;
           }
@@ -87,12 +90,15 @@ export default class TelegramClient {
           );
         }
 
+        this.log.info({ msg: 'client_not_found_create_new_one' });
+
         await this.db.clientCollection.insertOne({
           telegramId: client.id,
           firstFame: client.first_name,
           lastName: client.last_name,
           username: client.username,
-          filters: [],
+          bidTypes: [],
+          subjectsRF: [],
           isActive: true,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -108,22 +114,10 @@ export default class TelegramClient {
           return;
         }
 
-        const subjectRF = dbClient.filters.find(
-          (filter) => filter.field === ClientFiltersFields.SUBJECT_RF,
-        );
-
-        const bidTypes = dbClient.filters.find(
-          (filter) => filter.field === ClientFiltersFields.BID_TYPE,
-        );
-
         const clientInfo =
           `Ваши фильтры:\n` +
-          `${subjectRF && 'Регион: ' + subjectRF.value}\n` +
-          `${
-            bidTypes == null
-              ? 'Выбраны все виды торгов'
-              : 'Тип торгов: ' + bidTypes.value
-          }`;
+          `${'Регионы: ' + dbClient.subjectsRF}\n` +
+          `${'Тип торгов: ' + dbClient.bidTypes}`;
 
         await this.bot.sendMessage(client.id, clientInfo);
       }
@@ -167,8 +161,10 @@ export default class TelegramClient {
           { telegramId: client.id },
           {
             $set: {
-              filters: [{ field: ClientFiltersFields.SUBJECT_RF, value: text }],
               updatedAt: new Date(),
+            },
+            $push: {
+              subjectsRF: text,
             },
           },
         );
@@ -188,19 +184,19 @@ export default class TelegramClient {
         this.modifier = 'set_notice_type';
       }
 
-      if (
-        text &&
-        this.modifier === 'set_notice_type' &&
-        bidTypesResponse.biddTypes.includes(text)
-      ) {
+      if (text && bidTypesResponse.biddTypes.includes(text)) {
+        let bidTypes = [text];
+
+        if (text === 'Выбрать все') {
+          bidTypes = bidTypesResponse.biddTypes;
+        }
+
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },
           {
             $set: {
               updatedAt: new Date(),
-            },
-            $push: {
-              filters: { field: ClientFiltersFields.BID_TYPE, value: text },
+              bidTypes,
             },
           },
         );

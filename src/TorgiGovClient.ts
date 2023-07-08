@@ -118,7 +118,7 @@ export default class TorgiGovClient {
 
       const subjects = data.exportObject.structuredObject.masterData.NSI.map(
         ({ regionSubject }) => regionSubject.name,
-      );
+      ).sort((a, b) => a.localeCompare(b));
 
       return {
         status: 'OK',

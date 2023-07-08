@@ -10,15 +10,16 @@ services:
       MONGO_URI: mongodb://root:example@mongo:27017/
       REDIS_URI: redis:6379
       DATABASE_NAME: notifications
-      TELEGRAM_TOKEN: 5875153455:AAEnyi7AgYPbO9UiBtVXDfig67hLPuUxh_g
     stdin_open: true
     tty: true
     volumes:
       - .:/code
     working_dir: /code
-    ports: [ '3000:3000' ]
-    command: 'npm run start'
+    ports: [ '3000:3000', '9229:9229' ]
+    command: 'npm run start:dev'
     depends_on: [ redis ]
+    env_file:
+      - .env
   
   redis:
     image: redis:6-alpine
