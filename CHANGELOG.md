@@ -1,3 +1,10 @@
+## [1.4.7](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.6...v1.4.7) (2023-07-08)
+
+
+### fix
+
+* mongo query ([a7163e5](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/a7163e5957e986f1c79b61f0a4a7cec6439657ad))
+
 ## [1.4.6](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.5...v1.4.6) (2023-07-03)
 
 
