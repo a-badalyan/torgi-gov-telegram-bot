@@ -265,22 +265,13 @@ export type DbNotificationAdvanced = DbNotificationCommon & {
   };
 };
 
-export enum ClientFiltersFields {
-  SUBJECT_RF = 'subjectRF',
-  BID_TYPE = 'bidType',
-}
-
-export type ClientFilters = Array<{
-  field: ClientFiltersFields;
-  value: string;
-}>;
-
 export type DbClient = {
   telegramId: number;
   firstFame: string;
   lastName?: string | null;
   username?: string | null;
-  filters: ClientFilters;
+  bidTypes: Array<string>;
+  subjectsRF: Array<string>;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
