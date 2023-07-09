@@ -101,6 +101,11 @@ export default class TelegramClient {
           createdAt: new Date(),
           updatedAt: new Date(),
         });
+
+        await this.bot.sendMessage(
+          client.id,
+          'Вы успешно зарегистрированы, пожалуйста установите фильтры уведомлений выполнив команды: /set_region и /set_notice_type',
+        );
       }
 
       if (text === TGCommands.INFO) {
@@ -158,17 +163,6 @@ export default class TelegramClient {
             },
           },
         );
-
-        const keyboard = bidTypesResponse.biddTypes.map((bidType) => [
-          { text: bidType },
-        ]);
-
-        await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
-          reply_markup: {
-            keyboard,
-            one_time_keyboard: true,
-          },
-        });
       }
 
       if (text && bidTypesResponse.biddTypes.includes(text)) {

@@ -45,7 +45,7 @@ export default async function prepareTelegramNotification(
         await this.bullQueues[SEND_TELEGRAM_NOTIFICATION].add(
           SEND_TELEGRAM_NOTIFICATION,
           body,
-          { jobId: job.data.notice.noticeNumber },
+          { jobId: `${job.data.notice.noticeNumber}_${client.telegramId}` },
         );
       }),
     );

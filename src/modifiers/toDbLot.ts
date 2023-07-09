@@ -13,7 +13,7 @@ export function toDbLot(lot: LotType): DbLot {
     subjectRF: lot.biddingObjectInfo.subjectRF.name,
     estateAddress: lot.biddingObjectInfo.estateAddress,
     category: lot.biddingObjectInfo.category.name,
-    characteristics: lot.biddingObjectInfo.characteristics.map((i) => {
+    characteristics: lot.biddingObjectInfo.characteristics?.map((i) => {
       return {
         name: i.name,
         characteristicValue: i.characteristicValue,
