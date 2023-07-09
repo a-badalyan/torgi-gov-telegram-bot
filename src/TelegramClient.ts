@@ -11,7 +11,6 @@ export default class TelegramClient {
   private readonly log: Logger;
   private readonly db: Db;
   private readonly torgiGovClient: TorgiGovClient;
-  private modifier: string | null;
   public bot: TelegramBot;
 
   constructor({
@@ -29,7 +28,6 @@ export default class TelegramClient {
     this.db = db;
     this.bot = bot;
     this.torgiGovClient = torgiGovClient;
-    this.modifier = null;
   }
 
   async init(): Promise<void> {
@@ -123,8 +121,6 @@ export default class TelegramClient {
       }
 
       if (text === TGCommands.SET_REGION) {
-        this.modifier = 'set_region';
-
         const keyboard = subjectsResponse.subjects.map((subject) => [
           { text: subject },
         ]);
@@ -138,7 +134,30 @@ export default class TelegramClient {
       }
 
       if (text === TGCommands.SET_NOTICE_TYPE) {
-        this.modifier = 'set_notice_type';
+        const keyboard = bidTypesResponse.biddTypes.map((bidType) => [
+          { text: bidType },
+        ]);
+
+        await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
+          reply_markup: {
+            keyboard,
+            one_time_keyboard: true,
+          },
+        });
+      }
+
+      if (text && subjectsResponse.subjects.includes(text)) {
+        await this.db.clientCollection.updateOne(
+          { telegramId: client.id },
+          {
+            $set: {
+              updatedAt: new Date(),
+            },
+            $addToSet: {
+              subjectsRF: text,
+            },
+          },
+        );
 
         const keyboard = bidTypesResponse.biddTypes.map((bidType) => [
           { text: bidType },
@@ -152,51 +171,16 @@ export default class TelegramClient {
         });
       }
 
-      if (
-        text &&
-        this.modifier === 'set_region' &&
-        subjectsResponse.subjects.includes(text)
-      ) {
-        await this.db.clientCollection.updateOne(
-          { telegramId: client.id },
-          {
-            $set: {
-              updatedAt: new Date(),
-            },
-            $push: {
-              subjectsRF: text,
-            },
-          },
-        );
-
-        const keyboard = [
-          [{ text: 'Выбрать все' }],
-          ...bidTypesResponse.biddTypes.map((bidType) => [{ text: bidType }]),
-        ];
-
-        await this.bot.sendMessage(client.id, 'Выберите тип торгов', {
-          reply_markup: {
-            keyboard,
-            one_time_keyboard: true,
-          },
-        });
-
-        this.modifier = 'set_notice_type';
-      }
-
       if (text && bidTypesResponse.biddTypes.includes(text)) {
-        let bidTypes = [text];
-
-        if (text === 'Выбрать все') {
-          bidTypes = bidTypesResponse.biddTypes;
-        }
-
         await this.db.clientCollection.updateOne(
           { telegramId: client.id },
           {
             $set: {
               updatedAt: new Date(),
-              bidTypes,
+            },
+
+            $addToSet: {
+              bidTypes: text,
             },
           },
         );
