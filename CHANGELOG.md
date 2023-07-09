@@ -1,3 +1,10 @@
+## [1.4.8](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.7...v1.4.8) (2023-07-09)
+
+
+### fix
+
+* keyboard ([e41961c](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/e41961c872c9ba809e4bb5eb1398fcabfe79df3d))
+
 ## [1.4.7](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.6...v1.4.7) (2023-07-08)
 
 
