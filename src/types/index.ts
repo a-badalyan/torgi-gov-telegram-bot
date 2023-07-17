@@ -165,13 +165,13 @@ export type NoticeResponse = {
         version: number;
         commonInfo: {
           noticeNumber: string;
-          biddType: {
+          biddType?: {
             code: string;
             name: string;
           };
-          biddForm: { code: string; name: string };
+          biddForm?: { code: string; name: string };
           publishDate: string;
-          procedureName: string;
+          procedureName?: string;
           etp?: {
             code: string;
             name: string;

@@ -22,8 +22,6 @@ export default async function prepareTelegramNotification(
     return;
   }
 
-  // TODO: filter by bidType
-
   const query: Filter<DbClient> = {
     isActive: true,
     bidTypes: notice.biddType,
