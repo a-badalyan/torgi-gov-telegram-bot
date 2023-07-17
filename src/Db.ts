@@ -31,12 +31,6 @@ export default class Db implements IDb {
     await this.clientCollection.createIndex({ telegramId: 1 });
   }
 
-  async migrate(): Promise<void> {
-    // TODO
-
-    return;
-  }
-
   async disconnect(): Promise<void> {
     await this.client.close();
   }

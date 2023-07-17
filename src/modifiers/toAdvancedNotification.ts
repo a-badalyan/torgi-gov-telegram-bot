@@ -3,8 +3,15 @@ import { toDbLot } from './toDbLot';
 
 export function toAdvancedNotification(
   notification: NoticeResponse,
-): DbNotificationAdvanced {
+): DbNotificationAdvanced | undefined {
   const notice = notification.exportObject.structuredObject.notice;
+
+  if (
+    !notice.commonInfo.biddForm ||
+    !notice.commonInfo.biddType ||
+    !notice.commonInfo.procedureName
+  )
+    return undefined;
 
   return {
     noticeNumber: notice.commonInfo.noticeNumber,

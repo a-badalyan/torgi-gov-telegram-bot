@@ -15,7 +15,13 @@ export default async function getNotice(
     timeout: 10 * 1000,
   });
 
+  if (!data.exportObject.structuredObject.notice.commonInfo) {
+    return;
+  }
+
   const notice = toAdvancedNotification(data);
+
+  if (!notice) return;
 
   try {
     await this.db.notificationCollection.insertOne(notice);
