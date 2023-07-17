@@ -52,10 +52,6 @@ export default class TelegramClient {
         command: TGCommands.SET_NOTICE_TYPE,
         description: 'Установить тип торгов',
       },
-      {
-        command: TGCommands.SET_NOTICE_TYPE,
-        description: 'Установить тип торгов',
-      },
     ]);
 
     this.bot.on('message', async (msg) => {
