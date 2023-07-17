@@ -26,7 +26,7 @@ export default async function getNotice(
   try {
     await this.db.notificationCollection.insertOne(notice);
   } catch (err) {
-    // TODO
+    // TODO:
     this.log.error({ msg: (err as Error).message });
   }
 
