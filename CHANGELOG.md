@@ -1,3 +1,10 @@
+## [1.4.11](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.10...v1.4.11) (2023-07-17)
+
+
+### fix
+
+* test jenkins ([7cabbdf](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/7cabbdf2a4376fd190880c1566adc5f20fb6105e))
+
 ## [1.4.10](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.9...v1.4.10) (2023-07-17)
 
 
