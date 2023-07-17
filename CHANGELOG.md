@@ -1,3 +1,11 @@
+## [1.4.10](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.9...v1.4.10) (2023-07-17)
+
+
+### fix
+
+* types ([cc5da35](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/cc5da35f46b4d6bd559020f366fcfb017dde75c3))
+* types ([3c68db4](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/3c68db4a433fb35c8b3946845183bdb0c9803c41))
+
 ## [1.4.9](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.8...v1.4.9) (2023-07-09)
 
 
