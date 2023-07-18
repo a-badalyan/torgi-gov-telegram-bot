@@ -287,6 +287,7 @@ export enum TGCommands {
   INFO = '/info',
   SET_REGION = '/set_region',
   SET_NOTICE_TYPE = '/set_notice_type',
+  RESET_FILTERS = '/reset_filters',
 }
 
 export type BidTypes = {
