@@ -1,3 +1,10 @@
+## [1.4.12](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.11...v1.4.12) (2023-07-18)
+
+
+### fix
+
+* add reset filters command ([7666081](https://github.com/a-badalyan/torgi-gov-telegram-bot/commit/76660817a24ecf1061c170ea1ea7781d5c9bf82e))
+
 ## [1.4.11](https://github.com/a-badalyan/torgi-gov-telegram-bot/compare/v1.4.10...v1.4.11) (2023-07-17)
 
 
