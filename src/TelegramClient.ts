@@ -52,6 +52,10 @@ export default class TelegramClient {
         command: TGCommands.SET_NOTICE_TYPE,
         description: 'Установить тип торгов',
       },
+      {
+        command: TGCommands.RESET_FILTERS,
+        description: 'Очистить фильтры',
+      },
     ]);
 
     this.bot.on('message', async (msg) => {
@@ -149,6 +153,19 @@ export default class TelegramClient {
             one_time_keyboard: true,
           },
         });
+      }
+
+      if (text === TGCommands.RESET_FILTERS) {
+        await this.db.clientCollection.updateOne(
+          { telegramId: client.id },
+          {
+            $set: {
+              updatedAt: new Date(),
+              bidTypes: [],
+              subjectsRF: [],
+            },
+          },
+        );
       }
 
       if (text && subjectsResponse.subjects.includes(text)) {
